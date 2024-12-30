@@ -17,10 +17,11 @@ export class Company {
   @Column({ type: 'text' })
   passwordHash: string;
 
-  @Column({ length: 20 })
+
+  @Column({ nullable: true }) 
   phone: string;
 
-  @Column({ length: 255 })
+  @Column({ nullable: true })
   location: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

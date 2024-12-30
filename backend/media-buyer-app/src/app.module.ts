@@ -9,11 +9,13 @@ import { TeamMember } from './entities/team_members.entity';
 import { Company } from './entities/company.entity';
 import { User } from './entities/user.entity';
 import { Report } from './entities/reports.entity';
+import { AuthModule } from './modules/auth/auth.module';
 
 dotenv.config();
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot(), // Load .env variables
     TypeOrmModule.forRoot({
       type: 'postgres',
