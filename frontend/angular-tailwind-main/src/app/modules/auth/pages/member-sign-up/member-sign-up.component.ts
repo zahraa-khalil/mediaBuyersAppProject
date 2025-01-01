@@ -1,21 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonComponent } from 'src/app/shared/components/button/button.component';
-import { AuthService } from 'src/app/services/auth/auth.service';
 import { NgClass, NgIf } from '@angular/common';
-import { passwordMatchValidator } from 'src/app/shared/validators/passwordMatchValidator.';
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { toast } from 'ngx-sonner';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { ButtonComponent } from 'src/app/shared/components/button/button.component';
+import { passwordMatchValidator } from 'src/app/shared/validators/passwordMatchValidator.';
 
 @Component({
-  selector: 'app-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss'],
+  selector: 'app-member-sign-up',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, RouterLink, AngularSvgIconModule, NgClass, NgIf, ButtonComponent],
+  templateUrl: './member-sign-up.component.html',
+  styleUrl: './member-sign-up.component.scss'
 })
-export class SignUpComponent implements OnInit {
+export class MemberSignUpComponent {
   form!: FormGroup;
   submitted = false;
   passwordTextType!: boolean;

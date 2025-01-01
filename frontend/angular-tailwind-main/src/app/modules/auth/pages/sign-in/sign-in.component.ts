@@ -4,7 +4,7 @@ import { Router, RouterLink } from '@angular/router';
 import { NgClass, NgIf } from '@angular/common';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { AuthService } from 'src/app/services/auth.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
 import { toast } from 'ngx-sonner';
 
 @Component({
@@ -55,6 +55,7 @@ export class SignInComponent implements OnInit {
         next: (response: any) => {
           console.log("Logged in successfully", response);
           this.handleRequestSuccess(response);
+          localStorage.setItem('companyId', response.id);
           this._router.navigate(['../dashboard']);
         },
         error: (error: any) => {

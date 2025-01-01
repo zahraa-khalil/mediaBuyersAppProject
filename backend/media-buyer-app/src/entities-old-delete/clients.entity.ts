@@ -1,8 +1,8 @@
+import { Company } from 'src/modules/companies/company.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Company } from './company.entity';
 
-@Entity('users')
-export class User {
+@Entity('clients')
+export class Client {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -12,13 +12,7 @@ export class User {
   @Column({ length: 255, unique: true })
   email: string;
 
-  @Column({ type: 'text' })
-  passwordHash: string;
-
-  @Column({ length: 50 })
-  role: string;
-
-  @ManyToOne(() => Company, (company) => company.users)
+  @ManyToOne(() => Company, (company) => company.clients)
   company: Company;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

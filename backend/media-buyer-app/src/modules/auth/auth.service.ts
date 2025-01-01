@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Company } from 'src/entities/company.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'; 
+import { Company } from '../companies/company.entity';
+
 
 
 @Injectable()

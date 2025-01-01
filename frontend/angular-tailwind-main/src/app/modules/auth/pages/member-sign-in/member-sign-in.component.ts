@@ -1,73 +1,68 @@
-import { Component, OnInit } from '@angular/core';
-import { AngularSvgIconModule } from 'angular-svg-icon';
+import { Component } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonComponent } from 'src/app/shared/components/button/button.component';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { NgClass, NgIf } from '@angular/common';
-import { passwordMatchValidator } from 'src/app/shared/validators/passwordMatchValidator.';
 import { toast } from 'ngx-sonner';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { ButtonComponent } from "../../../../shared/components/button/button.component";
+import { NgClass, NgIf } from '@angular/common';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 @Component({
-  selector: 'app-sign-up',
-  templateUrl: './sign-up.component.html',
-  styleUrls: ['./sign-up.component.scss'],
+  selector: 'app-member-sign-in',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, RouterLink, AngularSvgIconModule, NgClass, NgIf, ButtonComponent],
+
+  templateUrl: './member-sign-in.component.html',
+  styleUrl: './member-sign-in.component.scss'
 })
-export class SignUpComponent implements OnInit {
+export class MemberSignInComponent {
   form!: FormGroup;
   submitted = false;
   passwordTextType!: boolean;
+
   constructor(private readonly _formBuilder: FormBuilder, private readonly _router: Router, private svc: AuthService) {}
 
-
+  onClick() {
+    console.log('Button clicked');
+  }
 
   ngOnInit(): void {
 
+
     this.form = this._formBuilder.group({
-      name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
-      confirmPassword: ['', Validators.required],
-    },
-    {
-      validator: passwordMatchValidator('password', 'confirmPassword'),
-    }
-
-    );
+    });
   }
 
   get f() {
     return this.form.controls;
   }
 
-
   togglePasswordTextType() {
-    console.log('Toggled password text type');
     this.passwordTextType = !this.passwordTextType;
   }
 
   onSubmit() {
     this.submitted = true;
-    // const { email, password } = this.form.value;
+    const { email, password } = this.form.value;
     let finalData = this.form.value;
-    delete finalData.confirmPassword;
-
-    console.log("register data", finalData);
+    console.log("Login data", finalData);
     // stop here if form is invalid
     if (this.form.invalid) {
       return;
     } else{
-      this.svc.register(finalData).subscribe({
+      this.svc.login(finalData).subscribe({
         next: (response: any) => {
-          console.log("register in successfully", response);
+          console.log("Logged in successfully", response);
           this.handleRequestSuccess(response);
-          this._router.navigate(['../auth/sign-in']);
+          localStorage.setItem('companyId', response.id);
+          this._router.navigate(['../dashboard']);
         },
         error: (error: any) => {
           console.error("Error", error);
           this.handleRequestError(error);
+
         },
         complete: () => {
 
@@ -77,13 +72,14 @@ export class SignUpComponent implements OnInit {
     }
 
 
+
   }
 
 
 
   private handleRequestSuccess(response: any) {
     // const msg = 'An error occurred while fetching users. Loading dummy data as fallback.';
-    const msg = 'Data successfully registered. Please login.';
+    const msg = 'Logged in successfully. Welcome!';
     toast.success(msg, {
       position: 'bottom-right',
       description: response.message,
@@ -108,4 +104,5 @@ export class SignUpComponent implements OnInit {
       actionButtonStyle: 'background-color:#DC2626; color:white;',
     });
   }
+
 }

@@ -4,18 +4,20 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import * as dotenv from 'dotenv';
-import { Client } from './entities/clients.entity';
-import { TeamMember } from './entities/team_members.entity';
-import { Company } from './entities/company.entity';
-import { User } from './entities/user.entity';
-import { Report } from './entities/reports.entity';
+import { Report } from './modules/reports/reports.entity';
 import { AuthModule } from './modules/auth/auth.module';
+import { Company } from './modules/companies/company.entity';
+import { User } from './modules/users/user.entity';
+import { Client } from './modules/clients/clients.entity';
+import { TeamMember } from './modules/team-member/team_members.entity';
+import { TeamMemberModule } from './modules/team-member/team-member.module';
 
 dotenv.config();
 
 @Module({
   imports: [
     AuthModule,
+    TeamMemberModule,
     ConfigModule.forRoot(), // Load .env variables
     TypeOrmModule.forRoot({
       type: 'postgres',
