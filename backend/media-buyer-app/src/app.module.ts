@@ -11,6 +11,8 @@ import { User } from './modules/users/user.entity';
 import { Client } from './modules/clients/clients.entity';
 import { TeamMember } from './modules/team-member/team_members.entity';
 import { TeamMemberModule } from './modules/team-member/team-member.module';
+import { FacebookService } from './modules/auth/facebook/facebook.service';
+import { FacebookModule } from './modules/auth/facebook/facebook.module';
 
 dotenv.config();
 
@@ -18,6 +20,7 @@ dotenv.config();
   imports: [
     AuthModule,
     TeamMemberModule,
+    FacebookModule,
     ConfigModule.forRoot(), // Load .env variables
     TypeOrmModule.forRoot({
       type: 'postgres',
@@ -33,6 +36,6 @@ dotenv.config();
     TypeOrmModule.forFeature([Company, User, TeamMember, Client, Report]),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, FacebookService],
 })
 export class AppModule {}
