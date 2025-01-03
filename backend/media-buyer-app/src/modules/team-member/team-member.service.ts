@@ -7,7 +7,6 @@ import * as bcrypt from 'bcrypt';
 import { Company } from '../companies/company.entity';
 import { AddTeamMembersDto } from './dtos/addTeamMembers.dto';
 @Injectable()
-
 export class TeamMemberService {
   constructor(
     @InjectRepository(TeamMember)
@@ -22,15 +21,17 @@ export class TeamMemberService {
 
   async addTeamMembers(addTeamMembersDto: AddTeamMembersDto) {
     const { companyId, members } = addTeamMembersDto;
-  
+
     console.log('Company ID:', companyId);
     console.log('Members:', members);
-  
-    const company = await this.companyRepository.findOne({ where: { id: companyId } });
+
+    const company = await this.companyRepository.findOne({
+      where: { id: companyId },
+    });
     if (!company) {
       throw new Error('Company not found.');
     }
-  
+
     for (const member of members) {
       console.log('Adding member:', member);
       const teamMember = this.teamMemberRepository.create({
@@ -41,10 +42,9 @@ export class TeamMemberService {
       });
       await this.teamMemberRepository.save(teamMember);
     }
-  
+
     return { message: 'Team members added successfully.' };
   }
-  
 
   async registerTeamMember(
     name: string,
@@ -56,11 +56,13 @@ export class TeamMemberService {
       where: { email },
       relations: ['company'], // Ensure you fetch the related company
     });
-  
+
     if (!teamMember) {
-      throw new BadRequestException('Team member not found. Please contact your admin.');
+      throw new BadRequestException(
+        'Team member not found. Please contact your admin.',
+      );
     }
-  
+
     // Create a new user
     const hashedPassword = await bcrypt.hash(password, 10); // Hash the password
     const user = this.userRepository.create({
@@ -70,19 +72,17 @@ export class TeamMemberService {
       role: teamMember.role, // Use the role from the team member record
       company: teamMember.company, // Link the user to the same company as the team member
     });
-  
+
     // Save the new user
     await this.userRepository.save(user);
-  
+
     // Update the team member record to reflect the registration
     teamMember.user = user;
     teamMember.status = 'registered';
     await this.teamMemberRepository.save(teamMember);
-  
+
     return user;
   }
-  
-
 
   async getTeamMembersByCompany(companyId: number): Promise<TeamMember[]> {
     // Fetch all team members of the given company
@@ -90,9 +90,7 @@ export class TeamMemberService {
       where: { company: { id: companyId } },
       relations: ['company'], // Ensure the company relation is included
     });
-  
+
     return teamMembers;
   }
-
-  
 }
