@@ -13,6 +13,7 @@ import { TeamMember } from './modules/team-member/team_members.entity';
 import { TeamMemberModule } from './modules/team-member/team-member.module';
 import { FacebookService } from './modules/auth/facebook/facebook.service';
 import { FacebookModule } from './modules/auth/facebook/facebook.module';
+import { UsersModule } from './modules/users/users.module';
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ dotenv.config();
     AuthModule,
     TeamMemberModule,
     FacebookModule,
+    UsersModule,
     ConfigModule.forRoot(), // Load .env variables
     TypeOrmModule.forRoot({
       type: 'postgres',
