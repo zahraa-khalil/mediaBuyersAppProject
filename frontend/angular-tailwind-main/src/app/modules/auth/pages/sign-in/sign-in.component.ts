@@ -28,6 +28,7 @@ export class SignInComponent implements OnInit {
   ngOnInit(): void {
 
 
+
     this.form = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
@@ -56,7 +57,7 @@ export class SignInComponent implements OnInit {
           console.log("Logged in successfully", response);
           this.handleRequestSuccess(response);
           localStorage.setItem('companyId', response.id);
-          this._router.navigate(['../dashboard']);
+          this._router.navigate(['../auth/facebook-auth']);
         },
         error: (error: any) => {
           console.error("Error", error);
@@ -78,7 +79,7 @@ export class SignInComponent implements OnInit {
 
   private handleRequestSuccess(response: any) {
     // const msg = 'An error occurred while fetching users. Loading dummy data as fallback.';
-    const msg = 'Logged in successfully. Welcome!';
+    const msg = 'Logged in successfully!';
     toast.success(msg, {
       position: 'bottom-right',
       description: response.message,

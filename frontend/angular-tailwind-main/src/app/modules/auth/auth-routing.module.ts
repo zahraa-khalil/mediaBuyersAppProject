@@ -8,6 +8,7 @@ import { SignUpComponent } from './pages/sign-up/sign-up.component';
 import { TwoStepsComponent } from './pages/two-steps/two-steps.component';
 import { MemberSignInComponent } from './pages/member-sign-in/member-sign-in.component';
 import { MemberSignUpComponent } from './pages/member-sign-up/member-sign-up.component';
+import { FacebookAuthComponent } from './pages/facebook-auth/facebook-auth.component';
 
 const routes: Routes = [
   {
@@ -22,6 +23,8 @@ const routes: Routes = [
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'new-password', component: NewPasswordComponent },
       { path: 'two-steps', component: TwoStepsComponent },
+      { path: 'facebook-auth', component: FacebookAuthComponent },
+      { path: 'facebook-auth-callback', component: FacebookAuthComponent },
       { path: '**', redirectTo: 'sign-in', pathMatch: 'full' },
     ],
   },

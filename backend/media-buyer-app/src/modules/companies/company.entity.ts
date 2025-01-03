@@ -24,6 +24,13 @@ export class Company {
   @Column({ nullable: true })
   location: string;
 
+  @Column({ default: false })
+  facebookAuthenticated: boolean; 
+
+
+  @Column({ type: 'text', nullable: true })
+  facebookToken: string;
+
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 

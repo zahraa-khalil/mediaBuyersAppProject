@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Req } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
@@ -23,4 +23,19 @@ export class AuthController {
   ) {
     return this.authService.loginCompany(email, password);
   }
+
+
+  @Get('facebook/company-auth-status/:companyId')
+  async checkCompanyFacebookAuthStatus(@Param('companyId') companyId: number) {
+    return this.authService.checkCompanyFacebookAuthStatus(companyId);
+  }
+  
+  @Get('facebook/user-auth-status/:userId')
+  async checkUserFacebookAuthStatus(@Param('userId') userId: number) {
+    return this.authService.checkUserFacebookAuthStatus(userId);
+  }
+  
+
+
+  
 }

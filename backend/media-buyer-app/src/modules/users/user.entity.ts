@@ -18,6 +18,9 @@ export class User {
   @Column({ length: 50 })
   role: string;
 
+  @Column({ default: false })
+  facebookAuthenticated: boolean;
+
   @ManyToOne(() => Company, (company) => company.users)
   company: Company;
 
