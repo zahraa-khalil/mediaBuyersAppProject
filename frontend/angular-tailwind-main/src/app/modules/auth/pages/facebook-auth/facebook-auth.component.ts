@@ -41,11 +41,8 @@ export class FacebookAuthComponent {
 
 
 
-  // Upon authenticating backend checks for user authentication status
-  // if user is authenticated, redirect user to url that doesn't iclude the "callback" parameter
-  // if not authenticated, redirect user to url that includes the "callback" parameter
 
-  // this function to check page routing
+  // This function to checks page routing
   // it gets called twice. first when user enters the page after login to choose to authenticate or not
   // second when user redirected from facebook after authentication or reauthentication
   // then the function checks if url includes "callback" ?  fires checkFacebookAuthCallback() to get acess token and completes the authentication process
