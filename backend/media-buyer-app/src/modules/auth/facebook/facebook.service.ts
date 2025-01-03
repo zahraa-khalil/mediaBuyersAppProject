@@ -25,43 +25,84 @@ export class FacebookService {
       throw new Error('Company not authenticated with Facebook');
     }
 
+    const accessToken = company.facebookToken;
+
     const url = `https://graph.facebook.com/v16.0/me/adaccounts`;
     try {
       const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${company.facebookToken}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
         params: { fields: 'account_id,name' },
       });
 
       return response.data;
     } catch (error) {
       if (error.response?.status === 401) {
-        console.error('Token expired, user needs to re-authenticate');
+        console.error('Access token expired, re-authentication required');
         throw new Error('Token expired');
       }
-      throw error;
+      throw new Error('Failed to fetch ad accounts');
     }
   }
 
 
-  async getCampaigns(adAccountId: string, accessToken: string): Promise<any> {
-    const url = `https://graph.facebook.com/v16.0/${adAccountId}/campaigns?fields=id,name,status`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return response.data;
-  }
+  async getCampaigns(adAccountId: string, companyId: number): Promise<any> {
+    const company = await this.companyRepository.findOne({ where: { id: companyId } });
+    console.log('???????????????????????????????????Fetching campaigns for ad account:', adAccountId);
+  
+    if (!company || !company.facebookToken) {
+      throw new Error('Company not authenticated with Facebook');
+    }
+  
+    const accessToken = company.facebookToken;
 
-  async getInsights(adAccountId: string, accessToken: string): Promise<any> {
-    const url = `https://graph.facebook.com/v16.0/${adAccountId}/insights?fields=impressions,clicks,spend`;
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
-    return response.data;
+  
+    const url = `https://graph.facebook.com/v16.0/${adAccountId}/campaigns`;
+  
+    try {
+      const response = await axios.get(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: { fields: 'id,name,status' },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching campaigns:', error.response?.data || error.message);
+      throw new Error('Failed to fetch campaigns');
+    }
   }
+  
+  async getInsights(adAccountId: string, companyId: number): Promise<any> {
+    const company = await this.companyRepository.findOne({ where: { id: companyId } });
+  
+    if (!company || !company.facebookToken) {
+      throw new Error('Company not authenticated with Facebook');
+    }
+  
+    const accessToken = company.facebookToken;
+  
+    const url = `https://graph.facebook.com/v16.0/${adAccountId}/insights`;
+  
+    try {
+      const response = await axios.get(url, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+        params: {
+          fields: 'campaign_id,campaign_name,impressions,clicks,spend',
+          level: 'campaign', // Specify that insights should be at the campaign level
+          time_range: { since: '2024-01-01', until: '2024-12-31' }, // Set a custom date range if needed
+          filtering: [
+            { field: 'campaign.delivery_info', operator: 'IN', value: ['active', 'paused', 'archived'] },
+          ], // Include campaigns with these statuses
+        },
+      });
+  
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching insights:', error.response?.data || error.message);
+      throw new Error('Failed to fetch insights');
+    }
+  }
+  
+  
 
 
   async updateCompanyAuthStatus(companyId: number, isAuthenticated: boolean, accessToken?: string): Promise<boolean> {

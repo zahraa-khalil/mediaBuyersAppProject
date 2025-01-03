@@ -2,6 +2,9 @@ import {
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
+  Param,
   Post,
   Query,
   Req,
@@ -90,6 +93,55 @@ async reAuthenticate(@Query('companyId') companyId: number, @Res() res: Response
   }
 }
 
+
+// get insights using adAccountId and reserver token in db
+@Get('ad-accounts/:companyId')
+  async fetchAdAccounts(@Param('companyId') companyId: number): Promise<any> {
+    try {
+      const adAccounts = await this.facebookService.getAdAccounts(companyId);
+      return { success: true, adAccounts };
+    } catch (error) {
+      console.error('Error fetching ad accounts:', error.message);
+      throw new HttpException('Failed to fetch ad accounts', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+
+    /**
+   * Fetch Campaigns for a Specific Ad Account
+   * Endpoint: GET /facebook/campaigns/:adAccountId/:companyId
+   */
+    @Get('campaigns/:adAccountId/:companyId')
+    async fetchCampaigns(
+      @Param('adAccountId') adAccountId: string,
+      @Param('companyId') companyId: number,
+    ): Promise<any> {
+      try {
+        const campaigns = await this.facebookService.getCampaigns(adAccountId, companyId);
+        return { success: true, campaigns };
+      } catch (error) {
+        console.error('Error fetching campaigns:', error.message);
+        throw new HttpException('Failed to fetch campaigns', HttpStatus.BAD_REQUEST);
+      }
+    }
+  /**
+   * Fetch Insights for an Ad Account
+   * Endpoint: GET /facebook/insights/:adAccountId/:companyId
+   */
+  @Get('insights/:adAccountId/:companyId')
+  async fetchInsights(
+    @Param('adAccountId') adAccountId: string,
+    @Param('companyId') companyId: number,
+  ): Promise<any> {
+    try {
+      // Fetch insights for campaigns
+      const insights = await this.facebookService.getInsights(adAccountId, companyId);
+      return { success: true, insights };
+    } catch (error) {
+      console.error('Error fetching insights:', error.message);
+      throw new HttpException('Failed to fetch insights', HttpStatus.BAD_REQUEST);
+    }
+  }
 
 }
 

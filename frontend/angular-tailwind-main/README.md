@@ -93,3 +93,11 @@ Check out our awesome sponsors!
 
 The Tailwind name and logos are trademarks of Tailwind Labs Inc.
 The Angular name and logos are trademarks of Google.
+
+
+
+
+Endpoints: 
+1. USER LOGIN: POST "users/login"
+2. AD ACCOUNTS LIST: "GET auth/facebook/ad-accounts/{companyId}"
+3. CAMPAIGNS LIST: "GET auth/facebook/campaigns/{adAccountId}/{companyId}"
