@@ -96,6 +96,7 @@ export class FacebookService {
           fields: `
             campaign_id,
             campaign_name,
+            objective,
             adset_id,
             adset_name,
             ad_id,

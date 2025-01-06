@@ -101,3 +101,11 @@ Endpoints:
 1. USER LOGIN: POST "users/login"
 2. AD ACCOUNTS LIST: "GET auth/facebook/ad-accounts/{companyId}"
 3. CAMPAIGNS LIST: "GET auth/facebook/campaigns/{adAccountId}/{companyId}"
+
+
+
+
+
+- Campaigns Table / Select ad account first
+columns: Campaign name, Campaign Objective, Campaign Results, Amount Spent
+Custom columns: Planned Results, Planned Budget (currency)
