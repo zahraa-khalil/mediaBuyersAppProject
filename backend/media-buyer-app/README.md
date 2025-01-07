@@ -112,7 +112,8 @@ Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
 8. Encrypt sensitive data using encryption libraries (e.g., bcrypt) (facebook token encryption)
 
 
-
+Instead of polling the API repeatedly, you can subscribe to Facebook's Webhooks to receive real-time updates about campaigns, ads, or other entities.?
+(helping you stay within rate limits.)
 
 <!-- next phase  -->
 9. Implement unit tests using Jest and write test cases for all API endpoints

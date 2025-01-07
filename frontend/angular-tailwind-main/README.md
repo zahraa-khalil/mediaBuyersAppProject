@@ -98,10 +98,10 @@ The Angular name and logos are trademarks of Google.
 
 
 Endpoints: 
-1. USER LOGIN: POST "users/login"
+1. USER LOGIN: POST "users/login" done
 2. AD ACCOUNTS LIST: "GET auth/facebook/ad-accounts/{companyId}"
 3. CAMPAIGNS LIST: "GET auth/facebook/campaigns/{adAccountId}/{companyId}"
-
+4. INSIGNTS LIST:  "GET auth/facebook/insights/{adAccountId}/{companyId}"
 
 
 

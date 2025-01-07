@@ -31,7 +31,7 @@ export class Menu {
           label: 'Campaigns',
           route: '/campaigns',
           children: [
-            { label: 'View Campaigns', route: '/campaigns' },
+            { label: 'View Campaigns', route: '/campaigns/list' },
             // { label: 'Members List', route: '/members/list' },
 
           ],
