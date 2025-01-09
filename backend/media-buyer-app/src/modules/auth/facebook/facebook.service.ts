@@ -30,7 +30,7 @@ export class FacebookService {
     try {
       const response = await axios.get(url, {
         headers: { Authorization: `Bearer ${accessToken}` },
-        params: { fields: 'account_id,name' },
+        params: { fields: 'account_id,name,account_status' },
       });
 
       return response.data;
@@ -47,10 +47,7 @@ export class FacebookService {
     const company = await this.companyRepository.findOne({
       where: { id: companyId },
     });
-    console.log(
-      '???????????????????????????????????Fetching campaigns for ad account:',
-      adAccountId,
-    );
+
 
     if (!company || !company.facebookToken) {
       throw new Error('Company not authenticated with Facebook');
@@ -76,56 +73,10 @@ export class FacebookService {
     }
   }
 
-  async getInsightss(adAccountId: string, companyId: number): Promise<any> {
-    const company = await this.companyRepository.findOne({
-      where: { id: companyId },
-    });
+ 
 
-    if (!company || !company.facebookToken) {
-      throw new Error('Company not authenticated with Facebook');
-    }
-
-    const accessToken = company.facebookToken;
-
-    const url = `https://graph.facebook.com/v16.0/${adAccountId}/insights`;
-
-    try {
-      const response = await axios.get(url, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-        params: {
-          fields: `
-            campaign_id,
-            campaign_name,
-            objective,
-            adset_id,
-            adset_name,
-            ad_id,
-            ad_name,
-            reach,
-            impressions,
-            spend,
-            cpm,
-            cpc,
-            ctr,
-            actions{action_type,value}
-          `.replace(/\s+/g, ''),
-          level: 'ad', // Fetch insights at the ad level
-          // time_range: { since: '2023-01-01', until: '2023-12-31' },
-        },
-      });
-
-      return response.data;
-    } catch (error) {
-      console.error(
-        'Error fetching insights with actions:',
-        error.response?.data || error.message,
-      );
-      throw new Error('Failed to fetch insights with actions');
-    }
-  }
-
-
-  async getInsights(adAccountId: string, companyId: number): Promise<any> {
+  async getInsights(adAccountId: string, companyId: number, timeRange: { since: string; until: string }): Promise<any> {
+   
     const company = await this.companyRepository.findOne({
       where: { id: companyId },
     });
@@ -156,7 +107,7 @@ export class FacebookService {
       const batch = [
         {
           method: 'GET',
-          relative_url: `${adAccountId}/insights?fields=campaign_id,campaign_name,objective,adset_id,adset_name,ad_id,ad_name,reach,impressions,spend,cpm,cpc,ctr,actions{action_type,value}&level=campaign`,
+          relative_url: `${adAccountId}/insights?fields=campaign_id,campaign_name,objective,adset_id,adset_name,ad_id,ad_name,reach,impressions,spend,cpm,cpc,ctr,actions{action_type,value}&level=campaign&time_range={"since":"${timeRange.since}","until":"${timeRange.until}"}`,
         },
         {
           method: 'GET',
@@ -183,7 +134,6 @@ export class FacebookService {
       const insights = JSON.parse(insightsResponse.body).data;
       const campaigns = JSON.parse(campaignsResponse.body).data;
   
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^&&&&&&& campaigns", campaigns)
       // Merge insights with campaign status
       const insightsWithStatus = insights.map((insight: any) => { 
         const campaign = campaigns.find((c: any) => c.id === insight.campaign_id);
@@ -192,8 +142,7 @@ export class FacebookService {
           campaign_status: campaign?.effective_status || 'Unknown',
         };
       });
-      console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^&&&&&&&&&&&&&&&&&&&&&&&*************((((((((((insightsWithStatus", insightsWithStatus)
-  
+     
       return insightsWithStatus;
     } catch (error) {
       console.error(
@@ -237,4 +186,96 @@ export class FacebookService {
       return false;
     }
   }
+
+
+
+
+
+  // DASHBOARD APIS
+
+
+
+  // get adaccounts with spend data
+  async getAdAccountSpend(companyId: number, timeRange: { since: string; until: string }): Promise<any> {
+    // Fetch company and access token
+    const company = await this.companyRepository.findOne({
+      where: { id: companyId },
+    });
+  
+    if (!company || !company.facebookToken) {
+      throw new Error('Company not authenticated with Facebook');
+    }
+  
+    const accessToken = company.facebookToken;
+  
+    // Fetch ad accounts
+    const adAccountsResponse = await this.getAdAccounts(companyId);
+    const adAccounts = adAccountsResponse.data;
+  
+    if (!adAccounts || adAccounts.length === 0) {
+      throw new Error('No ad accounts found for this company');
+    }
+
+    const activeAdAccounts = adAccounts.filter((account) => account.account_status != 101);
+
+
+    if (!activeAdAccounts.length) {
+      throw new Error('No active ad accounts found');
+    }
+
+    console.log(`Active Ad Accounts: ??????????????????????????????`, activeAdAccounts);
+
+  
+    // Build batch requests for spend
+    const batch = activeAdAccounts.map((account) => ({
+      method: 'GET',
+      relative_url: `act_${account.account_id}/insights?fields=spend&time_range={"since":"${timeRange.since}","until":"${timeRange.until}"}`,
+    }));
+   
+
+
+    try {
+      const response = await axios.post(
+        `https://graph.facebook.com/v16.0`,
+        {
+          access_token: accessToken,
+          batch: batch,
+        },
+        {
+          headers: { 'Content-Type': 'application/json' },
+        },
+      );
+   
+  
+      // Parse batch response
+      const spendData = response.data.map((res, index) => {
+
+        if (res.code === 200) {
+          const data = JSON.parse(res.body).data;
+
+          return {
+            adAccountName: activeAdAccounts[index].name,
+            adAccountId: activeAdAccounts[index].account_id,
+            adAccountStatus: activeAdAccounts[index].account_status,
+            spend: data.length > 0 ? data[0].spend : '0.00',
+          };
+        } else {
+          console.error(`Error fetching data for ${activeAdAccounts[index].account_id}:`, res.body);
+          return {
+            adAccountName: activeAdAccounts[index].name,
+            adAccountId: activeAdAccounts[index].account_id,
+            adAccountStatus: activeAdAccounts[index].account_status,
+            spend: 'Error',
+          };
+        }
+      });
+  
+      return spendData;
+    } catch (error) {
+      console.error('Error fetching ad account spend:', error.response?.data || error.message);
+      throw new Error('Failed to fetch spend data for ad accounts');
+    }
+  }
+  
+
 }

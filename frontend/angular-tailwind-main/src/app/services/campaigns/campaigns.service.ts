@@ -25,8 +25,8 @@ export class CampaignsService {
   }
 
 
-  getInsigntsByAdAccount(adAccountId: any, companyId: any): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/auth/facebook/insights/${adAccountId}/${companyId}`);
+  getInsigntsByAdAccount(adAccountId: any, companyId: any, timeRange: any): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/auth/facebook/insights/${adAccountId}/${companyId}?since=${timeRange.since}&until=${timeRange.until}`);
   }
 
 

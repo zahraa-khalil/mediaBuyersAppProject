@@ -1,18 +1,75 @@
 import { Component, OnInit } from '@angular/core';
 import { Nft } from '../../../models/nft';
 import { NftAuctionsTableItemComponent } from '../nft-auctions-table-item/nft-auctions-table-item.component';
-import { NgFor } from '@angular/common';
+import { CommonModule, NgFor } from '@angular/common';
+import { DashboardService } from 'src/app/services/dashboard/dashboard.service';
+import moment from 'moment';
 
 @Component({
-    selector: '[nft-auctions-table]',
-    templateUrl: './nft-auctions-table.component.html',
-    standalone: true,
-    imports: [NgFor, NftAuctionsTableItemComponent],
+  selector: '[nft-auctions-table]',
+  templateUrl: './nft-auctions-table.component.html',
+  standalone: true,
+  imports: [NgFor, NftAuctionsTableItemComponent, CommonModule],
+  styles: [
+    `
+      .status-icon {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 8px;
+      }
+
+      .status-icon.active {
+        background-color: green;
+      }
+
+      .status-icon.disabled {
+        background-color: red;
+      }
+
+      .status-icon.unsettled {
+        background-color: orange;
+      }
+
+      .status-icon.pending-review {
+        background-color: yellow;
+      }
+
+      .status-icon.in-grace-period {
+        background-color: blue;
+      }
+
+      .status-icon.pending-closure {
+        background-color: red;
+      }
+
+      .status-icon.closed {
+        background-color: gray;
+      }
+    `,
+  ],
 })
 export class NftAuctionsTableComponent implements OnInit {
   public activeAuction: Nft[] = [];
+  adAccountsWithSpendData: {
+    adAccountName: string;
+    adAccountId: string;
+    spend: number;
+    adAccountStatus: number;
+  }[] = [];
+  adAccounts: any = [];
+  companyId: any = localStorage.getItem('companyId');
+  lastUpdated: Date | null = null;
 
-  constructor() {
+accountWithSpend: {
+  adAccountName: string;
+  adAccountId: string;
+  spend: number;
+  adAccountStatus: number;
+}[] = [];
+
+  constructor(private svc: DashboardService) {
     this.activeAuction = [
       {
         id: 1346771,
@@ -77,5 +134,116 @@ export class NftAuctionsTableComponent implements OnInit {
     ];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.accountWithSpend = JSON.parse(localStorage.getItem('accountWithSpend') || '[]');
+
+    const storedLastUpdated = localStorage.getItem('lastUpdated');
+    if (storedLastUpdated) {
+      this.lastUpdated = new Date(storedLastUpdated);
+    }
+  }
+
+  getStatusClass(status: number): string {
+    switch (status) {
+      case 1:
+        return 'active';
+      case 2:
+        return 'disabled';
+      case 3:
+        return 'unsettled';
+      case 7:
+        return 'pending-review';
+      case 8:
+        return 'in-grace-period';
+      case 9:
+        return 'pending-closure';
+      case 101:
+        return 'closed';
+      default:
+        return '';
+    }
+  }
+
+  // DASHBOARD APIS
+
+  // Adaccount with spend
+
+  updateAdAccountsWithSpend(date: number) {
+    // this.getInsightsByAdAccount();
+  }
+
+  isWithinRateLimit(lastUpdated: Date): boolean {
+    const now = new Date();
+    const timeDiff = now.getTime() - lastUpdated.getTime(); // Difference in milliseconds
+    const rateLimitWindow = 5 * 60 * 1000; // 5 minutes in milliseconds
+    return timeDiff < rateLimitWindow;
+  }
+
+
+  getRelativeTime(): string {
+    if (this.lastUpdated) {
+      return moment(this.lastUpdated).fromNow(); // e.g., "2 minutes ago"
+    }
+    return 'Not updated yet';
+  }
+
+  getInsightsByAdAccount(timeRange: { since: string; until: string }) {
+    // let timeRange = {
+    //   since: '2024-12-01',
+    //   until: '2024-12-31',
+    // };
+
+    // Fetch data only if necessary
+    if (this.lastUpdated && this.isWithinRateLimit(this.lastUpdated)) {
+      console.log('Data is already up-to-date. Last fetched at:', this.lastUpdated);
+      return;
+    }
+
+    this.svc.getAdAccountWithSpend(this.companyId, timeRange).subscribe({
+      next: (response: any) => {
+
+        this.adAccountsWithSpendData = response;
+        // Filter accounts with spend not equal to 0
+        this.accountWithSpend = this.adAccountsWithSpendData.filter(account => account.spend != 0);
+
+        console.log("accountWithSpend", this.accountWithSpend)
+        localStorage.setItem('accountWithSpend', JSON.stringify(this.accountWithSpend));
+
+        console.log('adAccountWithSpend retrieved successfully', response);
+        this.lastUpdated = new Date();
+
+        console.log('Last Updated:', this.lastUpdated);
+        localStorage.setItem('lastUpdated', this.lastUpdated.toISOString());
+
+        // this.handleRequestSuccess(response);
+      },
+      error: (error: any) => {
+        console.error('Error', error);
+        // this.handleRequestError(error);
+      },
+      complete: () => {},
+    });
+  }
+
+  setTimeRange(range: string) {
+    let timeRange = { since: '', until: '' };
+
+    switch (range) {
+      case 'thisMonth':
+        timeRange.since = moment().startOf('month').format('YYYY-MM-DD');
+        // timeRange.until = moment().endOf('month').format('YYYY-MM-DD');
+        timeRange.until = moment().format('YYYY-MM-DD'); // Today's date
+        break;
+      case 'lastMonth':
+        timeRange.since = moment().subtract(1, 'month').startOf('month').format('YYYY-MM-DD');
+        timeRange.until = moment().subtract(1, 'month').endOf('month').format('YYYY-MM-DD');
+        break;
+      case 'lastYear':
+        timeRange.since = moment().subtract(1, 'year').startOf('year').format('YYYY-MM-DD');
+        timeRange.until = moment().subtract(1, 'year').endOf('year').format('YYYY-MM-DD');
+        break;
+    }
+    console.log('time range', timeRange);
+    this.getInsightsByAdAccount(timeRange)
+  }
 }

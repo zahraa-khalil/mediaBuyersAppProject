@@ -121,7 +121,11 @@ export class CampaignsListComponent {
 
 
   getInsightsByAdAccount(adAccountId: any) {
-    this.svc.getInsigntsByAdAccount(adAccountId, this.companyId).subscribe({
+    let timeRange = {
+      since: '2024-12-01',
+      until: '2024-12-31',
+    }
+    this.svc.getInsigntsByAdAccount(adAccountId, this.companyId, timeRange).subscribe({
       next: (response: any) => {
         this.insights = response.insights;
         localStorage.setItem('insights', JSON.stringify(this.insights));

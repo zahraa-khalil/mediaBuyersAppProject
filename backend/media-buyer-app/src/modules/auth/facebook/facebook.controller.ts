@@ -132,10 +132,21 @@ async reAuthenticate(@Query('companyId') companyId: number, @Res() res: Response
   async fetchInsights(
     @Param('adAccountId') adAccountId: string,
     @Param('companyId') companyId: number,
+    @Query('since') since: string,
+    @Query('until') until: string,
   ): Promise<any> {
     try {
+      const timeRange = { since, until };
+     
+      if (!since || !until) {
+        throw new Error('Both "since" and "until" dates are required');
+      }
+      if (new Date(since) > new Date(until)) {
+        throw new Error('"since" date cannot be after "until" date');
+      }
+
       // Fetch insights for campaigns
-      const insights = await this.facebookService.getInsights(adAccountId, companyId);
+      const insights = await this.facebookService.getInsights(adAccountId, companyId, timeRange);
       return { success: true, insights };
     } catch (error) {
       console.error('Error fetching insights:', error.message);
@@ -143,6 +154,24 @@ async reAuthenticate(@Query('companyId') companyId: number, @Res() res: Response
     }
   }
 
+
+
+
+
+
+  // DASHBOARD APIS
+
+  // ADACCOUNT WITH SPEND
+  @Get('adaccounts/spend/:companyId')
+  async getAdAccountSpend(
+    @Param('companyId') companyId: number,
+    @Query('since') since: string,
+    @Query('until') until: string,
+  ): Promise<any> {
+    const timeRange = { since, until };
+
+    return this.facebookService.getAdAccountSpend(companyId, timeRange);
+  }
 }
 
   

@@ -109,3 +109,15 @@ Endpoints:
 - Campaigns Table / Select ad account first
 columns: Campaign name, Campaign Objective, Campaign Results, Amount Spent
 Custom columns: Planned Results, Planned Budget (currency)
+
+
+
+The account_status field in the Facebook Marketing API indicates the current state of the ad account. Here are the meanings of the possible values:
+Value	Status	Description
+1	Active	The ad account is active and can run ads.
+2	Disabled	The ad account is disabled and cannot run ads (e.g., due to policy violations).
+3	Unsettled	The ad account has unpaid balances or billing issues preventing ad delivery.
+7	Pending Review	The ad account is under review and cannot run ads until approval.
+8	In Grace Period	The ad account is temporarily suspended but may resume after resolving issues.
+9	Pending Closure	The ad account is scheduled for closure and cannot run ads.
+101	Closed	The ad account is permanently closed and cannot be reactivated.
