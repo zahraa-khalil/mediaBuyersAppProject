@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AdInsights - Facebook Ad Analytics Platform</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .animate-fade-in-up {
+      animation: fadeInUp 0.5s ease-out forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+  <!-- Navbar -->
+  <nav class="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
+    <div class="container mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <i data-lucide="bar-chart-3" class="h-6 w-6 text-blue-600"></i>
+          <span class="font-bold text-xl">AdInsights</span>
+        </div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#features" class="text-gray-600 hover:text-blue-600 transition-colors">Features</a>
+          <a href="#agency" class="text-gray-600 hover:text-blue-600 transition-colors">For Agencies</a>
+          <a href="#why-us" class="text-gray-600 hover:text-blue-600 transition-colors">Why Us</a>
+          <a href="#team" class="text-gray-600 hover:text-blue-600 transition-colors">Team</a>
+        </div>
+        <a href="#" class="bg-blue-600 text-white px-3 md:px-6 py-2 rounded-full hover:bg-blue-700 transition-colors">
+          Get Started
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="pt-32 pb-20 px-6">
+    <div class="container mx-auto max-w-6xl">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6">
+          <h1 class="text-5xl md:text-6xl font-bold leading-tight bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+            Facebook Ad Insights Platform
+          </h1>
+          <p class="text-xl text-gray-600">
+            Transform your Facebook ad campaigns with real-time analytics and actionable insights. Make data-driven decisions faster than ever.
+          </p>
+          <div class="flex space-x-4">
+            <a href="#features" class="bg-blue-600 text-white px-3 py-3 lg:px-8 rounded-full hover:bg-blue-700 transition-colors inline-flex items-center">
+              Get Started
+              <i data-lucide="arrow-right" class="ml-2 h-5 w-5"></i>
+            </a>
+            <a href="#about" class="border border-gray-300 text-gray-700 px-3 lg:px-8 py-3 rounded-full hover:bg-gray-50 transition-colors">
+              Learn More
+            </a>
+          </div>
+        </div>
+        <div class="relative">
+          <img 
+            src="./assets/Graphic-2.png"
+            alt="Analytics Dashboard"
+            class=""
+          />
+          <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg">
+            <div class="flex items-center space-x-3">
+              <i data-lucide="line-chart" class="h-8 w-8 text-blue-600"></i>
+              <div>
+                <p class="font-bold">+127%</p>
+                <p class="text-sm text-gray-600">ROI Increase</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+
+  <script>
+    lucide.createIcons();
+  </script>
+</body>
+</html>
