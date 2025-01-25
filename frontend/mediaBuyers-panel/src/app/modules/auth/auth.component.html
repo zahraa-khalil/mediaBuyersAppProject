@@ -1,0 +1,39 @@
+<div class="flex h-screen w-screen">
+  <div class="auth-bg hidden flex-1 items-center justify-center bg-primary bg-cover lg:flex">
+    <div class="max-w-2xl space-y-4 p-8 text-center text-white">
+      <img src="./assets/images/auth-screens.png" alt="dashboard widget" class="px-14 py-6"/>
+      <h1 class="text-4xl font-bold">"Fast, Efficient and Productive"</h1>
+      <p class="text-xs font-light">
+        Facebook Ad Insights Platform Transform your Facebook ad campaigns with real-time analytics and actionable
+        insights. Make data-driven decisions faster than ever. Built for
+        <span class="font-medium text-yellow-400">Marketing Agencies</span> to empower your agency with comprehensive
+        Facebook ad analytics and team collaboration tools including:
+        <span class="font-medium text-yellow-400"
+          >Multi-Client Management, Advanced Analytics and Performance Tracking</span
+        >
+        Agency Team Benefits: Media Buyers: Gain quick access to campaign metrics and optimization insights; Agency
+        Leaders: get an overview of agency-wide performance and client success
+      </p>
+    </div>
+  </div>
+  <div class="flex flex-1 items-center justify-center bg-background">
+    <div class="max-w-md overflow-y-auto px-4 sm:w-[500px]">
+      <!-- logo -->
+      <div class="flex items-center justify-center">
+        <a class="rounded bg-primary ">
+          <svg-icon  src="assets/icons/logo.svg" [svgClass]="'h-8 w-8'"> </svg-icon>
+          <!-- <img src="assets/icons/logo.svg" alt="" width="100%"> -->
+        </a>
+        <!-- <a class="rounded border border-primary">
+          <svg-icon  src="assets/icons/logo.svg" [svgClass]="'h-8 w-8'"> </svg-icon>
+        </a> -->
+        <b class="text-md pl-3 font-bold text-foreground">
+
+          AdInsights </b>
+      </div>
+
+      <!-- Route -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
