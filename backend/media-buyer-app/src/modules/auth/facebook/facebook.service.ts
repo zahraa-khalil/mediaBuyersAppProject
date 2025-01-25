@@ -223,8 +223,7 @@ export class FacebookService {
       throw new Error('No active ad accounts found');
     }
 
-    console.log(`Active Ad Accounts: ??????????????????????????????`, activeAdAccounts);
-
+   
   
     // Build batch requests for spend
     const batch = activeAdAccounts.map((account) => ({
