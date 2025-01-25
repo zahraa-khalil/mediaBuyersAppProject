@@ -20,6 +20,15 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/auth/register`, obj);
   }
 
+
+  teamRegister(obj: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/team-members/register`, obj);
+  }
+
+  teamLogin(obj: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/user/login`, obj);
+  }
+
   logout() {
     // Clear user data from local storage or wherever you store it
     // localStorage.removeItem('token');

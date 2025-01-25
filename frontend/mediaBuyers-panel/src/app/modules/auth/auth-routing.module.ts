@@ -15,10 +15,9 @@ const routes: Routes = [
     path: '',
     component: AuthComponent,
     children: [
-      { path: '', redirectTo: 'sign-in', pathMatch: 'full' },
-      { path: 'sign-in', component: SignInComponent, data: { returnUrl: window.location.pathname } },
+      { path: '', redirectTo: 'team/sign-in', pathMatch: 'full' },
       { path: 'team/sign-in', component: MemberSignInComponent, data: { returnUrl: window.location.pathname } },
-      { path: 'sign-up', component: SignUpComponent },
+      { path: 'team/sign-up', component: MemberSignUpComponent },
       { path: 'team/sign-up', component: MemberSignUpComponent },
       { path: 'forgot-password', component: ForgotPasswordComponent },
       { path: 'new-password', component: NewPasswordComponent },

@@ -63,7 +63,7 @@ export class MemberSignUpComponent {
         next: (response: any) => {
           console.log("register in successfully", response);
           this.handleRequestSuccess(response);
-          this._router.navigate(['../auth/sign-in']);
+          this._router.navigate(['../auth/team/sign-in']);
         },
         error: (error: any) => {
           console.error("Error", error);

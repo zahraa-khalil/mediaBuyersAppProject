@@ -51,7 +51,7 @@ export class ProfileMenuComponent implements OnInit {
     {
       title: 'Log out',
       icon: './assets/icons/heroicons/outline/logout.svg',
-      link: '/auth/sign-in',
+      link: '/auth/team/sign-in',
     },
   ];
 
@@ -89,8 +89,8 @@ export class ProfileMenuComponent implements OnInit {
   public themeMode = ['light', 'dark'];
 
 
-  userName = localStorage.getItem('companyName');
-  userEmail = localStorage.getItem('companyEmail');
+  userName = localStorage.getItem('memberName');
+  userEmail = localStorage.getItem('memberEmail');
   constructor(public themeService: ThemeService) {}
 
   ngOnInit(): void {}

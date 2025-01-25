@@ -57,6 +57,9 @@ export class MemberSignInComponent {
           console.log("Logged in successfully", response);
           this.handleRequestSuccess(response);
           localStorage.setItem('companyId', response.id);
+      
+          localStorage.setItem('memberName', response.name);
+          localStorage.setItem('memberEmail', response.email);
           this._router.navigate(['../dashboard']);
         },
         error: (error: any) => {

@@ -15,16 +15,16 @@ export class Menu {
             // { label: 'Podcast', route: '/dashboard/podcast' },
           ],
         },
-        {
-          icon: 'assets/icons/heroicons/outline/users.svg',
-          label: 'Members',
-          route: '/members',
-          children: [
-            { label: 'Add Members', route: '/members' },
-            // { label: 'Members List', route: '/members/list' },
+        // {
+        //   icon: 'assets/icons/heroicons/outline/users.svg',
+        //   label: 'Members',
+        //   route: '/members',
+        //   children: [
+        //     { label: 'Add Members', route: '/members' },
+        //     // { label: 'Members List', route: '/members/list' },
 
-          ],
-        },
+        //   ],
+        // },
 
         {
           icon: 'assets/icons/heroicons/outline/megaphone.svg',
@@ -164,7 +164,7 @@ export class Menu {
         {
           icon: 'assets/icons/heroicons/outline/logout.svg',
           label: 'Logout',
-          route: '/auth/sign-in', // Replace with your actual logout route
+          route: '/auth/team/sign-in', // Replace with your actual logout route
 
         },
       ],
