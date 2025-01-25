@@ -20,7 +20,7 @@ export class CampaignsListComponent {
   companyId: any = localStorage.getItem('companyId');
 
   members: Member[] = [];
-
+  filteredInsightsItemsLength: number = 0;
   adAccounts: any[] = [];
   campaigns: any[] = [];
   insights: any[] = [];
@@ -48,6 +48,7 @@ export class CampaignsListComponent {
     // this.localInsights =localStorage.getItem('insights');
     this.localInsights = JSON.parse(localStorage.getItem('insights') || '[]');
     this.filteredInsights = this.localInsights
+    this.filteredInsightsItemsLength = this.filteredInsights.length;
     // this.getActionValueByObjective( this.filteredInsights)
     this.localAdAccounts = JSON.parse(localStorage.getItem('adAccounts') || '[]');
 
@@ -96,6 +97,7 @@ export class CampaignsListComponent {
         this.adAccounts = response.adAccounts.data;
         console.log('data retrieved successfully', this.adAccounts);
         localStorage.setItem('adAccounts', JSON.stringify(this.adAccounts));
+        console.log('adAccounts retrieved successfully', this.adAccounts.length);
         this.updatePagination();
         // this.handleRequestSuccess(response);
         // localStorage.setItem('companyId', response.id);
@@ -131,7 +133,7 @@ export class CampaignsListComponent {
         localStorage.setItem('insights', JSON.stringify(this.insights));
         this.filteredInsights = this.insights;
 
-        console.log('INSIGHTS retrieved successfully', this.insights);
+        console.log('INSIGHTS retrieved successfully', this.insights.length);
         this.updatePagination();
         // this.handleRequestSuccess(response);
         // localStorage.setItem('companyId', response.id);

@@ -57,6 +57,8 @@ export class SignInComponent implements OnInit {
           console.log("Logged in successfully", response);
           this.handleRequestSuccess(response);
           localStorage.setItem('companyId', response.id);
+          localStorage.setItem('companyName', response.name);
+          localStorage.setItem('companyEmail', response.email);
           this._router.navigate(['../auth/facebook-auth']);
         },
         error: (error: any) => {
