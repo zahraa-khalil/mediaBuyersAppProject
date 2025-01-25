@@ -14,7 +14,6 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { FacebookService } from './facebook.service';
 import { Response } from 'express';
-import { AuthService } from '../auth.service';
 
 @Controller('auth/facebook')
 export class FacebookController {
@@ -50,7 +49,6 @@ export class FacebookController {
     @Body() body: any,
     @Res() res: Response,
   ): Promise<void> {
-
     const { accessToken, companyId } = body;
 
     if (!accessToken || !companyId) {
@@ -58,72 +56,95 @@ export class FacebookController {
       res.status(400).send({ message: 'Missing accessToken or companyId' });
       return;
     }
-  
-  console.log('Company Auth Callback Received:', { accessToken, companyId });
 
-  try {
-     // Save accessToken and update authentication status in the database
-     const isUpdated = await this.facebookService.updateCompanyAuthStatus(companyId, true, accessToken);
+    console.log('Company Auth Callback Received:', { accessToken, companyId });
 
-     if (isUpdated) {
-      console.log(`Company ${companyId} authenticated successfully`);
-      res.status(200).send({ message: 'Company authenticated successfully' });
-    } else {
-      console.error(`Failed to update company authentication data for ID ${companyId}`);
-      res.status(500).send({ message: 'Failed to update authentication data' });
+    try {
+      // Save accessToken and update authentication status in the database
+      const isUpdated = await this.facebookService.updateCompanyAuthStatus(
+        companyId,
+        true,
+        accessToken,
+      );
+
+      if (isUpdated) {
+        console.log(`Company ${companyId} authenticated successfully`);
+        res.status(200).send({ message: 'Company authenticated successfully' });
+      } else {
+        console.error(
+          `Failed to update company authentication data for ID ${companyId}`,
+        );
+        res
+          .status(500)
+          .send({ message: 'Failed to update authentication data' });
+      }
+    } catch (error) {
+      console.error('Error during company authentication callback:', error);
+      res.status(500).send({ message: 'Internal server error' });
     }
-  } catch (error) {
-    console.error('Error during company authentication callback:', error);
-    res.status(500).send({ message: 'Internal server error' });
-
   }
-}
 
-@Get('reauthenticate')
-@UseGuards(AuthGuard('facebook'))
-async reAuthenticate(@Query('companyId') companyId: number, @Res() res: Response): Promise<void> {
-  try {
-    const newToken = 'new_facebook_token'; // Replace with real token retrieval logic
-    await this.facebookService.updateCompanyAuthStatus(companyId, true ,newToken);
+  @Get('reauthenticate')
+  @UseGuards(AuthGuard('facebook'))
+  async reAuthenticate(
+    @Query('companyId') companyId: number,
+    @Res() res: Response,
+  ): Promise<void> {
+    try {
+      const newToken = 'new_facebook_token'; // Replace with real token retrieval logic
+      await this.facebookService.updateCompanyAuthStatus(
+        companyId,
+        true,
+        newToken,
+      );
 
-    res.status(200).send({ message: 'Re-authentication successful', token: newToken });
-  } catch (error) {
-    console.error('Re-authentication failed:', error);
-    res.status(500).send({ message: 'Re-authentication failed' });
+      res
+        .status(200)
+        .send({ message: 'Re-authentication successful', token: newToken });
+    } catch (error) {
+      console.error('Re-authentication failed:', error);
+      res.status(500).send({ message: 'Re-authentication failed' });
+    }
   }
-}
 
-
-// get insights using adAccountId and reserver token in db
-@Get('ad-accounts/:companyId')
+  // get insights using adAccountId and reserver token in db
+  @Get('ad-accounts/:companyId')
   async fetchAdAccounts(@Param('companyId') companyId: number): Promise<any> {
     try {
       const adAccounts = await this.facebookService.getAdAccounts(companyId);
       return { success: true, adAccounts };
     } catch (error) {
       console.error('Error fetching ad accounts:', error.message);
-      throw new HttpException('Failed to fetch ad accounts', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Failed to fetch ad accounts',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 
-
-    /**
+  /**
    * Fetch Campaigns for a Specific Ad Account
    * Endpoint: GET /facebook/campaigns/:adAccountId/:companyId
    */
-    @Get('campaigns/:adAccountId/:companyId')
-    async fetchCampaigns(
-      @Param('adAccountId') adAccountId: string,
-      @Param('companyId') companyId: number,
-    ): Promise<any> {
-      try {
-        const campaigns = await this.facebookService.getCampaigns(adAccountId, companyId);
-        return { success: true, campaigns };
-      } catch (error) {
-        console.error('Error fetching campaigns:', error.message);
-        throw new HttpException('Failed to fetch campaigns', HttpStatus.BAD_REQUEST);
-      }
+  @Get('campaigns/:adAccountId/:companyId')
+  async fetchCampaigns(
+    @Param('adAccountId') adAccountId: string,
+    @Param('companyId') companyId: number,
+  ): Promise<any> {
+    try {
+      const campaigns = await this.facebookService.getCampaigns(
+        adAccountId,
+        companyId,
+      );
+      return { success: true, campaigns };
+    } catch (error) {
+      console.error('Error fetching campaigns:', error.message);
+      throw new HttpException(
+        'Failed to fetch campaigns',
+        HttpStatus.BAD_REQUEST,
+      );
     }
+  }
   /**
    * Fetch Insights for an Ad Account
    * Endpoint: GET /facebook/insights/:adAccountId/:companyId
@@ -137,7 +158,7 @@ async reAuthenticate(@Query('companyId') companyId: number, @Res() res: Response
   ): Promise<any> {
     try {
       const timeRange = { since, until };
-     
+
       if (!since || !until) {
         throw new Error('Both "since" and "until" dates are required');
       }
@@ -146,18 +167,20 @@ async reAuthenticate(@Query('companyId') companyId: number, @Res() res: Response
       }
 
       // Fetch insights for campaigns
-      const insights = await this.facebookService.getInsights(adAccountId, companyId, timeRange);
+      const insights = await this.facebookService.getInsights(
+        adAccountId,
+        companyId,
+        timeRange,
+      );
       return { success: true, insights };
     } catch (error) {
       console.error('Error fetching insights:', error.message);
-      throw new HttpException('Failed to fetch insights', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Failed to fetch insights',
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
-
-
-
-
-
 
   // DASHBOARD APIS
 
@@ -173,5 +196,3 @@ async reAuthenticate(@Query('companyId') companyId: number, @Res() res: Response
     return this.facebookService.getAdAccountSpend(companyId, timeRange);
   }
 }
-
-  
