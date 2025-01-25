@@ -1,7 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { User } from './user.entity';
-import { Client } from './clients.entity';
-
+import { User } from '../users/user.entity';
+import { Client } from '../clients/clients.entity';
 
 @Entity('companies')
 export class Company {
@@ -17,11 +16,17 @@ export class Company {
   @Column({ type: 'text' })
   passwordHash: string;
 
-  @Column({ length: 20 })
+  @Column({ nullable: true })
   phone: string;
 
-  @Column({ length: 255 })
+  @Column({ nullable: true })
   location: string;
+
+  @Column({ default: false })
+  facebookAuthenticated: boolean;
+
+  @Column({ type: 'text', nullable: true })
+  facebookToken: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
@@ -35,4 +40,3 @@ export class Company {
   @OneToMany(() => Client, (client) => client.company)
   clients: Client[];
 }
-

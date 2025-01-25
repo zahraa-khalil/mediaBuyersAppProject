@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
-import { Company } from './company.entity';
+import { Company } from '../companies/company.entity';
 
 @Entity('users')
 export class User {
@@ -18,6 +18,9 @@ export class User {
   @Column({ length: 50 })
   role: string;
 
+  @Column({ default: false })
+  facebookAuthenticated: boolean;
+
   @ManyToOne(() => Company, (company) => company.users)
   company: Company;
 
@@ -27,4 +30,3 @@ export class User {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
 }
-

@@ -97,3 +97,33 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+
+
+
+<!-- TASKS -->
+1. Implement authentication using JWT (JSON Web Tokens)
+2. Add pagination to the API endpoints
+3. Implement a user role system (e.g., admin, user)
+4. Add input validation using class-validator
+5. Implement rate limiting to prevent abuse
+6. Implement a caching mechanism (e.g., Redis)
+7. Implement error handling using middleware and exception filters
+8. Encrypt sensitive data using encryption libraries (e.g., bcrypt) (facebook token encryption)
+
+
+Instead of polling the API repeatedly, you can subscribe to Facebook's Webhooks to receive real-time updates about campaigns, ads, or other entities.?
+(helping you stay within rate limits.)
+
+<!-- next phase  -->
+9. Implement unit tests using Jest and write test cases for all API endpoints
+10. Implement end-to-end tests using Cypress and write test cases for the entire application
+11. Implement a logging mechanism (e.g., winston) to log all API requests and responses
+12. Implement a monitoring system (e.g., Prometheus) to monitor the performance of the API endpoints
+13. Implement a security auditing system (e.g., Nessus) to scan the application for potential security vulnerabilities
+14. Implement a code quality analysis system (e.g., SonarQube) to analyze the code quality and provide feedback
+15. Implement a CI/CD pipeline using tools like Jenkins, GitLab CI/CD, or CircleCI
+16. Implement a deployment strategy using tools like Docker, Kubernetes, or AWS Elastic Beanstalk
+17. Implement a feature toggle system to enable or disable specific features based on environment variables
+18. Implement a secure API key management system (e.g., AWS KMS) to store and manage API keys securely
+

@@ -10,6 +10,8 @@ import { NgxSonnerToaster } from 'ngx-sonner';
   styleUrls: ['./app.component.scss'],
   standalone: true,
   imports: [NgClass, RouterOutlet, ResponsiveHelperComponent, NgxSonnerToaster],
+
+
 })
 export class AppComponent {
   title = 'Media Buyers Kit';
