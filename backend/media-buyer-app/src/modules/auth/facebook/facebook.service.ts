@@ -48,7 +48,6 @@ export class FacebookService {
       where: { id: companyId },
     });
 
-
     if (!company || !company.facebookToken) {
       throw new Error('Company not authenticated with Facebook');
     }
@@ -73,21 +72,22 @@ export class FacebookService {
     }
   }
 
- 
-
-  async getInsights(adAccountId: string, companyId: number, timeRange: { since: string; until: string }): Promise<any> {
-   
+  async getInsights(
+    adAccountId: string,
+    companyId: number,
+    timeRange: { since: string; until: string },
+  ): Promise<any> {
     const company = await this.companyRepository.findOne({
       where: { id: companyId },
     });
-  
+
     if (!company || !company.facebookToken) {
       throw new Error('Company not authenticated with Facebook');
     }
-  
+
     const accessToken = company.facebookToken;
     const url = `https://graph.facebook.com/v16.0`;
-  
+
     try {
       // Batch request payload
       // const batch = [
@@ -114,7 +114,7 @@ export class FacebookService {
           relative_url: `${adAccountId}/campaigns?fields=id,name,effective_status`,
         },
       ];
-  
+
       const response = await axios.post(
         `${url}`,
         {
@@ -127,22 +127,24 @@ export class FacebookService {
           },
         },
       );
-  
+
       // Parse the batch response
       const [insightsResponse, campaignsResponse] = response.data;
-  
+
       const insights = JSON.parse(insightsResponse.body).data;
       const campaigns = JSON.parse(campaignsResponse.body).data;
-  
+
       // Merge insights with campaign status
-      const insightsWithStatus = insights.map((insight: any) => { 
-        const campaign = campaigns.find((c: any) => c.id === insight.campaign_id);
+      const insightsWithStatus = insights.map((insight: any) => {
+        const campaign = campaigns.find(
+          (c: any) => c.id === insight.campaign_id,
+        );
         return {
           ...insight,
           campaign_status: campaign?.effective_status || 'Unknown',
         };
       });
-     
+
       return insightsWithStatus;
     } catch (error) {
       console.error(
@@ -152,9 +154,6 @@ export class FacebookService {
       throw new Error('Failed to fetch batch insights and campaign status');
     }
   }
-
-  
-
 
   async updateCompanyAuthStatus(
     companyId: number,
@@ -187,51 +186,45 @@ export class FacebookService {
     }
   }
 
-
-
-
-
   // DASHBOARD APIS
 
-
-
   // get adaccounts with spend data
-  async getAdAccountSpend(companyId: number, timeRange: { since: string; until: string }): Promise<any> {
+  async getAdAccountSpend(
+    companyId: number,
+    timeRange: { since: string; until: string },
+  ): Promise<any> {
     // Fetch company and access token
     const company = await this.companyRepository.findOne({
       where: { id: companyId },
     });
-  
+
     if (!company || !company.facebookToken) {
       throw new Error('Company not authenticated with Facebook');
     }
-  
+
     const accessToken = company.facebookToken;
-  
+
     // Fetch ad accounts
     const adAccountsResponse = await this.getAdAccounts(companyId);
     const adAccounts = adAccountsResponse.data;
-  
+
     if (!adAccounts || adAccounts.length === 0) {
       throw new Error('No ad accounts found for this company');
     }
 
-    const activeAdAccounts = adAccounts.filter((account) => account.account_status != 101);
-
+    const activeAdAccounts = adAccounts.filter(
+      (account) => account.account_status != 101,
+    );
 
     if (!activeAdAccounts.length) {
       throw new Error('No active ad accounts found');
     }
 
-   
-  
     // Build batch requests for spend
     const batch = activeAdAccounts.map((account) => ({
       method: 'GET',
       relative_url: `act_${account.account_id}/insights?fields=spend&time_range={"since":"${timeRange.since}","until":"${timeRange.until}"}`,
     }));
-   
-
 
     try {
       const response = await axios.post(
@@ -244,11 +237,9 @@ export class FacebookService {
           headers: { 'Content-Type': 'application/json' },
         },
       );
-   
-  
+
       // Parse batch response
       const spendData = response.data.map((res, index) => {
-
         if (res.code === 200) {
           const data = JSON.parse(res.body).data;
 
@@ -259,7 +250,10 @@ export class FacebookService {
             spend: data.length > 0 ? data[0].spend : '0.00',
           };
         } else {
-          console.error(`Error fetching data for ${activeAdAccounts[index].account_id}:`, res.body);
+          console.error(
+            `Error fetching data for ${activeAdAccounts[index].account_id}:`,
+            res.body,
+          );
           return {
             adAccountName: activeAdAccounts[index].name,
             adAccountId: activeAdAccounts[index].account_id,
@@ -268,13 +262,14 @@ export class FacebookService {
           };
         }
       });
-  
+
       return spendData;
     } catch (error) {
-      console.error('Error fetching ad account spend:', error.response?.data || error.message);
+      console.error(
+        'Error fetching ad account spend:',
+        error.response?.data || error.message,
+      );
       throw new Error('Failed to fetch spend data for ad accounts');
     }
   }
-  
-
 }

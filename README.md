@@ -132,5 +132,5 @@ Integration with Other APIs: Expand beyond Facebook Ads to Google Ads, TikTok Ad
 
 # Contributors
 Fatma Khalil: Full-Stack Developer
-Mahmoud Samy: Backend Developer
+Mahmoud Samy(msamy250): Backend Developer
 Ahmed Nageb: Backend Developer
