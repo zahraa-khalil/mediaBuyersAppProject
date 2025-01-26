@@ -30,6 +30,51 @@ Database: PostgreSQL.
 
 
 # Setup Instructions
+1. Prerequisites
+Ensure you have the following installed on your machine:
+
+Node.js (v14 or above) - Download Node.js
+Angular CLI (v13 or above) - Install via:
+
+npm install -g @angular/cli
+PostgreSQL (v13 or above) - Download PostgreSQL
+Git (optional for cloning the repository) - Download Git
+2. Clone the Repository
+If you have Git installed:
+
+git clone <repository-url>
+cd media-buying-tool
+If you don’t have Git:
+
+Download the project as a ZIP file from your repository.
+Extract the contents and navigate to the project folder.
+3. Install Dependencies
+Run the following command in the project root directory to install all required packages:
+
+npm install
+4. Configure the Environment
+Set up the environment variables for your project. Create an environment.ts file in the src/environments folder (if not already present) and add the following configurations:
+
+export const environment = {
+  production: false,
+  apiUrl: '<YOUR_BACKEND_API_URL>',
+  facebookAppId: '<YOUR_FACEBOOK_APP_ID>',
+  facebookAppSecret: '<YOUR_FACEBOOK_APP_SECRET>'
+};
+Replace <YOUR_BACKEND_API_URL>, <YOUR_FACEBOOK_APP_ID>, and <YOUR_FACEBOOK_APP_SECRET> with your backend API URL and Facebook app credentials.
+
+5. Set Up the Database
+Install and configure PostgreSQL.
+Create a new database for the project, e.g., media_buying_tool.
+Use the provided SQL schema (if available) or connect your backend to create the required tables.
+6. Run the Development Server
+Start the Angular development server:
+
+ng serve
+This will serve the project on http://localhost:4200.
+
+
+
 # Prerequisites
 Node.js (v14+)
 Angular CLI (v13+)
