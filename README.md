@@ -30,6 +30,13 @@ Database: PostgreSQL.
 
 
 # Setup Instructions
+
+Note: In this project there are three folders: Backend, frontend and landing page.
+in order for the project to work you need to select each folder and start to set it up. 
+in frontend folder navigate to the folder inside it then run npm i then ng s 
+for the backend navigate to the folder inside then run npm i
+
+
 1. Prerequisites
 Ensure you have the following installed on your machine:
 
