@@ -129,6 +129,10 @@ const spendDataList =  this.accountWithSpend.map((account) => account.spend);
     });
   }
 
+  setTimeRange(range: string) {
+    this.accountWithSpend = JSON.parse(localStorage.getItem('accountWithSpend') || '[]');
+    console.log(" this.accountWithSpend ",  this.accountWithSpend )
+  }
   private HSLToHex(color: string): string {
     const colorArray = color.split('%').join('').split(' ');
     const colorHSL = colorArray.map(Number);
